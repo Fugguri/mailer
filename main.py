@@ -10,7 +10,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 file = open("config.json", "r")
 config = json.load(file)
 
-OPENAI_KEY = config["openai"]
+
 TOKEN_API = config["TOKEN_API"]
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ py_handler = logging.FileHandler(f"logs/{__name__}.log", mode='w')
 logger.addHandler(py_handler)
 
 
-openai.api_key = OPENAI_KEY
+
 storage = MemoryStorage()
 bot = Bot(TOKEN_API, parse_mode="HTML")
 dp = Dispatcher(bot, storage=storage)
