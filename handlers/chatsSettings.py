@@ -89,8 +89,8 @@ async def updateTimeInterval(message: types.Message, state=State):
                             await message.answer("У вас в профиле сликом много чатов, купите подписку Telegram Premium или загрузите новый профиль. Заканчиваю вступление.")
                             break
                         except FloodWait as ex:
-                            await asyncio.sleep(ex.value)
                             await message.answer(f"Внимание, слишком ного попыток присоединения, придется подождать {ex.value} секунд.")
+                            await asyncio.sleep(ex.value)
                         except Exception as ex:
                             await message.answer(f"Ошибка, обратитесь к администратору {ex}")
                             continue
