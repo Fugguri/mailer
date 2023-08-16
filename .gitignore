@@ -4,3 +4,4 @@ config.json
 /trash
 mailing_data/*
 sessions/*
+Makefile
