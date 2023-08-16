@@ -76,20 +76,20 @@ async def updateTimeInterval(message: types.Message, state=State):
                                                 chat_data.id,
                                                 client_data[0])
                             counter += 1
-
-                        except KeyError as ex:
-                            await message.answer("Чат не найден {}".format(chat))
-                        except UsernameInvalid as ex:
-                            await message.answer("Чат не найден {}".format(chat))
-                        except UsernameNotOccupied as ex:
-                            await message.answer("Чат не найден {}".format(chat))
-                        except ChatAdminRequired as ex:
-                            await message.answer("Нужны права администратора {}".format(chat))
-                        except ChannelsTooMuch as ex:
-                            await message.answer("У вас в профиле сликом много чатов, купите подписку Telegram Premium или загрузите новый профиль. Заканчиваю вступление.")
-                            break
-                        except FloodWait as ex:
-                            await asyncio.sleep(ex.value)
+                            print(chat_data)
+                        # except KeyError as ex:
+                        #     await message.answer("Чат не найден {}".format(chat))
+                        # except UsernameInvalid as ex:
+                        #     await message.answer("Чат не найден {}".format(chat))
+                        # except UsernameNotOccupied as ex:
+                        #     await message.answer("Чат не найден {}".format(chat))
+                        # except ChatAdminRequired as ex:
+                        #     await message.answer("Нужны права администратора {}".format(chat))
+                        # except ChannelsTooMuch as ex:
+                        #     await message.answer("У вас в профиле сликом много чатов, купите подписку Telegram Premium или загрузите новый профиль. Заканчиваю вступление.")
+                        #     break
+                        # except FloodWait as ex:
+                        #     await asyncio.sleep(ex.value)
                         except Exception as ex:
                             await message.answer(f"Ошибка, обратитесь к администратору {ex}")
                             continue

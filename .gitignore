@@ -1,7 +1,7 @@
 **/__pycache__
 __pycache__
 config.json
-/trash
+trash
 mailing_data/*
 sessions/*
 Makefile
