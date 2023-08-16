@@ -23,13 +23,17 @@ kb = keyboards.back().add(types.InlineKeyboardButton(
     text="Далее", callback_data="Далее"))
 
 
-@dp.callback_query_handler(lambda call: call.data == "Добавить профиль")
-async def start(callback: types.CallbackQuery):
+@dp.callback_query_handler(lambda call: call.data == "Добавить профиль",state="*")
+async def start(callback: types.CallbackQuery,state: State):
     logger.info(f'{callback.from_user}  - добавить профиль')
     await AddProfile.intro.set()
     users_data[callback.from_user.id] = {}
     await callback.message.answer(
         text="Ссылка на инструкцию по регистрации https://telegra.ph/Instrukciya-po-registracii-03-25 ", reply_markup=kb)
+    try:
+        await state.finish()
+    except: 
+        pass
 
 
 @dp.callback_query_handler(lambda call: call.data == "Далее", state=AddProfile.intro)

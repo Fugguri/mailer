@@ -26,8 +26,8 @@ user_client = {}
 
 
 @dp.callback_query_handler(lambda call: call.data == "back")
-@dp.callback_query_handler(lambda call: call.data == "Управление рассылкой")
-async def mailSettings(callback: types.CallbackQuery):
+@dp.callback_query_handler(lambda call: call.data == "Управление рассылкой",state="*")
+async def mailSettings(callback: types.CallbackQuery,state:State):
     text = """Внимание, тут производится настройка рассылки.
 Выберите номер, который хотите настроить"""
     phones = db.all_user_clients(callback.from_user.id)
@@ -36,6 +36,11 @@ async def mailSettings(callback: types.CallbackQuery):
         reply_markup.add(types.InlineKeyboardButton(
             text=phone, callback_data=phone))
     await qlog(callback, text, reply_markup)
+    try:
+        await state.finish()
+    except: 
+        pass
+
 
 
 @dp.callback_query_handler(lambda call: call.data in db.all_user_clients(call.from_user.id))
