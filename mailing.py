@@ -51,7 +51,7 @@ async def start_mailing(client_number):
                               id=phone,
                               hours=mailing_interval,
                               #   minutes=1,
-                              misfire_grace_time = 1000,
+                              misfire_grace_time=1000,
                               args=(phone, api_id, api_hash, chats, mail_text, client[-4]))
 
             pass
@@ -75,15 +75,16 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
     try:
         async with Client(phone, api_id=api_id, api_hash=api_hash,
                           phone_number=phone, workdir="mailing_sessions/") as app:
-            
+
             sending_messages[phone] = []
             for chat in chats:
                 try:
                     message = await app.send_message(chat[3], mail_text)
                     sending_messages[phone].append(datetime.datetime.now().strftime("%D %H:%M ") + "MSK "
                                                    f"t.me/{message.chat.username}/{message.id}")
-                    with open(f"mailing_data/{phone}.txt","a") as file:
-                        file.write(datetime.datetime.now().strftime("%d.%m.%Y %H:%M ") + "MSK "+f"t.me/{message.chat.username}/{message.id} \n")
+                    with open(f"mailing_data/{phone}.txt", "a") as file:
+                        file.write(datetime.datetime.now().strftime(
+                            "%d.%m.%Y %H:%M ") + "MSK "+f"t.me/{message.chat.username}/{message.id} \n")
                     await asyncio.sleep(15)
                     print(phone)
                 except errors.exceptions.not_acceptable_406.ChannelPrivate as ex:
@@ -109,7 +110,7 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
                     pass
                 except Exception as ex:
                     print(ex, phone)
-                    
+
                     continue
     except UserDeactivatedBan:
         await bot.send_message(telegram_id, "Ваш номер был заблокирован {}.".format(phone))

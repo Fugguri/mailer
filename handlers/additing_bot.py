@@ -23,17 +23,17 @@ kb = keyboards.back().add(types.InlineKeyboardButton(
     text="Далее", callback_data="Далее"))
 
 
-@dp.callback_query_handler(lambda call: call.data == "Добавить профиль",state="*")
-async def start(callback: types.CallbackQuery,state: State):
+@dp.callback_query_handler(lambda call: call.data == "Добавить профиль", state="*")
+async def start(callback: types.CallbackQuery, state: State):
+    try:
+        await state.finish()
+    except:
+        pass
     logger.info(f'{callback.from_user}  - добавить профиль')
     await AddProfile.intro.set()
     users_data[callback.from_user.id] = {}
     await callback.message.answer(
         text="Ссылка на инструкцию по регистрации https://telegra.ph/Instrukciya-po-registracii-03-25 ", reply_markup=kb)
-    try:
-        await state.finish()
-    except: 
-        pass
 
 
 @dp.callback_query_handler(lambda call: call.data == "Далее", state=AddProfile.intro)
@@ -56,7 +56,7 @@ async def collect_id(message: types.Message):
         users_data[message.from_user.id]["phone"] = phone
         await AddProfile.connection.set()
         await message.answer(f"Текущие данные: \napi_id: {api_id} ,\napi_hash: {api_hash} , \nphone: {phone} \nЧтобы продолжить нажмите далее", reply_markup=kb)
-    except Exception as ex :
+    except Exception as ex:
         print(ex)
         await message.answer(f"Ошибка в обработке данных, проверьте данные и попробуйте снова.", reply_markup=keyboards.back())
 

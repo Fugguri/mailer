@@ -1,5 +1,5 @@
 from datetime import date
-from .config import host, user, password,port
+from .config import host, user, password, port
 import pymysql
 
 
@@ -218,11 +218,11 @@ class Database:
         self.connection.close()
         return res
 
-    def get_chats_list(self, phone,user_id):
+    def get_chats_list(self, phone, user_id):
         self.connection.ping()
         with self.connection.cursor() as cursor:
             cursor.execute(
-                "SELECT * FROM chats WHERE client_id=(SELECT id FROM clients WHERE user_id=(SELECT id FROM users WHERE telegram_id=%s ) and phone=%s)", (user_id,phone))
+                "SELECT * FROM chats WHERE client_id=(SELECT id FROM clients WHERE user_id=(SELECT id FROM users WHERE telegram_id=%s ) and phone=%s)", (user_id, phone))
             res = cursor.fetchall()
         self.connection.close()
         return res
