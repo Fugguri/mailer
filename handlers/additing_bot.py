@@ -103,6 +103,9 @@ async def next_number(message: types.Message):
             await client.disconnect()
             await message.answer(f"Успешно {me.first_name} {me.last_name}", reply_markup=keyboards.back())
             db.create_client(message.from_id, api_id, api_hash, phone)
+            import os
+            os.system(
+                f"cp sessions/{phone}.session mailing_sessions/{phone}.session ")
         except Exception as ex:
             await message.answer(f"Ошибка {ex}", reply_markup=keyboards.back())
 
