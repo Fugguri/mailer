@@ -236,6 +236,15 @@ class Database:
         self.connection.close()
         return res
 
+    def get_client_by_phone(self, phone):
+        self.connection.ping()
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM clients WHERE phone=%s", (phone,))
+            res = cursor.fetchone()
+        self.connection.close()
+        return res
+
 
 if __name__ == "__main__":
     a = Database("swm")

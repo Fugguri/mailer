@@ -26,8 +26,12 @@ user_client = {}
 
 
 @dp.callback_query_handler(lambda call: call.data == "back")
-@dp.callback_query_handler(lambda call: call.data == "Управление рассылкой",state="*")
-async def mailSettings(callback: types.CallbackQuery,state:State):
+@dp.callback_query_handler(lambda call: call.data == "Управление рассылкой", state="*")
+async def mailSettings(callback: types.CallbackQuery, state: State):
+    try:
+        await state.finish()
+    except:
+        pass
     text = """Внимание, тут производится настройка рассылки.
 Выберите номер, который хотите настроить"""
     phones = db.all_user_clients(callback.from_user.id)
@@ -36,11 +40,6 @@ async def mailSettings(callback: types.CallbackQuery,state:State):
         reply_markup.add(types.InlineKeyboardButton(
             text=phone, callback_data=phone))
     await qlog(callback, text, reply_markup)
-    try:
-        await state.finish()
-    except: 
-        pass
-
 
 
 @dp.callback_query_handler(lambda call: call.data in db.all_user_clients(call.from_user.id))
@@ -160,8 +159,8 @@ async def stat(callback: types.CallbackQuery):
     try:
         client_number = user_client[callback.from_user.id]
         try:
-            with open(f"mailing_data/{client_number}.txt","r") as file:
-                await callback.message.answer_document(file,caption=f"Данные обо всех отправленных сообщениях с номера {client_number}",reply_markup=reply_markup)
+            with open(f"mailing_data/{client_number}.txt", "r") as file:
+                await callback.message.answer_document(file, caption=f"Данные обо всех отправленных сообщениях с номера {client_number}", reply_markup=reply_markup)
             return
         except:
             await qlog(callback, "Нет данных для этой рассылки", reply_markup)
@@ -179,45 +178,36 @@ async def stat(callback: types.CallbackQuery):
 
 @dp.callback_query_handler(lambda call: call.data == "Ручной запуск рассылки")
 async def handleStartMaling(callback: types.CallbackQuery):
-    try:
-        clients = db.all_user_clients_for_mailing(callback.from_user.id)
-        for client in clients:
-            client_id = client[0]
-            user_id = client[1]
-            api_id = client[2]
-            api_hash = client[3]
-            phone = client[4]
-            mail_text = client[5]
-            is_active = client[6]
-            if is_active:
-                chats = db.mailing_chats(client_id)
-                if chats != ():
-                    try:
-                        text = "Запускаю рассылку"
-                        reply_markup = mailing_settings_kb()
-                        await qlog(callback, text, reply_markup)
-                        await connect_and_send(phone, api_id, api_hash, chats, mail_text, callback.from_user.id)
-
-                        await asyncio.sleep(10)
-                    except Exception as ex:
-                        text = f"Error {ex}. Обратитесь к администратору"
-                        reply_markup = back()
-                        await qlog(callback, text, reply_markup)
-
-                        print(ex)
-                else:
-
-                    text = f"Сначала добавьте чаты"
-                    reply_markup = back()
-                    await qlog(callback, text, reply_markup)
-
-            else:
-                text = f"Оплатите доступ для номера {phone}"
+    client_number = user_client[callback.from_user.id]
+    client = db.get_client_by_phone(client_number)
+    client_id = client[0]
+    user_id = client[1]
+    api_id = client[2]
+    api_hash = client[3]
+    phone = client[4]
+    mail_text = client[5]
+    is_active = client[6]
+    if is_active:
+        chats = db.mailing_chats(client_id)
+        if chats != ():
+            try:
+                text = "Запускаю рассылку"
+                reply_markup = mailing_settings_kb()
+                await qlog(callback, text, reply_markup)
+                await connect_and_send(phone, api_id, api_hash, chats, mail_text, callback.from_user.id)
+                await asyncio.sleep(10)
+            except Exception as ex:
+                text = f"Error {ex}. Обратитесь к администратору"
                 reply_markup = back()
                 await qlog(callback, text, reply_markup)
-    except Exception as ex:
-        text = f"Ошибка {ex} обратитесь к администратору"
-        reply_markup = mailing_settings_kb()
+                print(ex)
+        else:
+            text = f"Сначала добавьте чаты"
+            reply_markup = back()
+            await qlog(callback, text, reply_markup)
+    else:
+        text = f"Оплатите доступ для номера {phone}"
+        reply_markup = back()
         await qlog(callback, text, reply_markup)
 
 
