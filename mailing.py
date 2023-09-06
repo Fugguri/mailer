@@ -82,7 +82,7 @@ def write_mailing_data(phone, message):
 def write_mailing_err_data(phone, err=None, chat=None):
     date = datetime.datetime.now().strftime("%d.%m.%Y %H:%M ") + "MSK "
     with open(f"mailing_data/{phone}.txt", "a") as file:
-        file.write(date + str(chat[1]) + " "+str(err))
+        file.write(date + str(chat[1]) + " "+str(err)+'\n')
 
 
 async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_id):
@@ -103,7 +103,7 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
                                                f"t.me/{message.chat.username}/{message.id}")
 
                 write_mailing_data(phone, message)
-                await asyncio.sleep(15)
+                await asyncio.sleep(190)
             except UserBannedInChannel:
                 text = f"Вы больше не можете отправлять сообщения в группы и каналы с номера {phone} для получения дополнительной информации перейдите в @SpamBot"
                 await bot.send_message(telegram_id, text)
