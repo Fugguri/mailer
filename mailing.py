@@ -79,7 +79,7 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
                           phone_number=phone, workdir="mailing_sessions/", proxy=proxy) as app:
             sending_messages[phone] = []
             for chat in chats:
-                try:
+                # try:
                     message = await app.send_message(chat[3], mail_text)
                     sending_messages[phone].append(datetime.datetime.now().strftime("%D %H:%M ") + "MSK "
                                                    f"t.me/{message.chat.username}/{message.id}")
@@ -108,9 +108,9 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
                 # except AttributeError:
                 #     print(phone)
                 #     pass
-                except Exception as ex:
-                    print(ex, phone)
-                    continue
+                # except Exception as ex:
+                #     print(ex, phone)
+                #     continue
     except UserDeactivatedBan:
         await bot.send_message(telegram_id, "Ваш номер был заблокирован {}.".format(phone))
         scheduler.remove_job(phone)
