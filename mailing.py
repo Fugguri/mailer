@@ -110,12 +110,10 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
                 text = f"Это приватный канал {chat}, невозможно отправить сообщение"
                 await bot.send_message(telegram_id, text)
                 write_mailing_err_data(phone, err=text, chat=chat)
-                continue
             except Forbidden:
                 text = f"Вы не можете отправлять мультимедийные (текстовые) сообщения в этом чате. чат - {chat}  Номер телефона - {phone}"
                 await bot.send_message(telegram_id, text)
                 write_mailing_err_data(phone, err=text, chat=chat)
-                continue
             except errors.exceptions.bad_request_400.ChatAdminRequired as ex:
                 print(ex)
                 text = "у вас нет прав администратора, чтобы отправлять сообщения в этот чат/канал"
