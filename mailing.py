@@ -90,17 +90,17 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
     proxy = {"scheme": "HTTP", "hostname": "45.92.171.19",
              "port": 8000, "username": 'dGC5o8', "password": 'zcf7tx'}
     # try:
-    async with Client(phone, api_id=api_id, api_hash=api_hash,
-                      phone_number=phone, workdir="mailing_sessions/", proxy=proxy) as app:
         sending_messages[phone] = []
         for chat in chats:
             try:
-                print(chat[3])
-                message = await app.send_message(chat[3], mail_text)
-                sending_messages[phone].append(datetime.datetime.now().strftime("%D %H:%M ") + "MSK "
-                                               f"t.me/{message.chat.username}/{message.id}")
+                async with Client(phone, api_id=api_id, api_hash=api_hash,
+                                phone_number=phone, workdir="mailing_sessions/", proxy=proxy) as app:
+                    print(chat[3])
+                    message = await app.send_message(chat[3], mail_text)
+                    sending_messages[phone].append(datetime.datetime.now().strftime("%D %H:%M ") + "MSK "
+                                                f"t.me/{message.chat.username}/{message.id}")
 
-                write_mailing_data(phone, message)
+                    write_mailing_data(phone, message)
             except UserBannedInChannel:
                 text = f"Вы больше не можете отправлять сообщения в группы и каналы с номера {phone} для получения дополнительной информации перейдите в @SpamBot"
                 await bot.send_message(telegram_id, text)
