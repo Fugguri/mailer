@@ -123,7 +123,7 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
                 write_mailing_err_data(phone, err=text, chat=chat)
 
             except UserDeactivatedBan:
-                text = "Ваш номер был заблокирован {}.".format(phone)
+                text = f"Ваш номер был заблокирован {phone}."
                 await bot.send_message(telegram_id, text)
                 scheduler.remove_job(phone)
                 write_mailing_err_data(phone, err=ex, chat=chat)
