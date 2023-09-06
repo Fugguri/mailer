@@ -103,10 +103,9 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
                 write_mailing_data(phone, message)
                 await asyncio.sleep(15)
             except UserBannedInChannel:
-                text = "Вы больше не можете отправлять сообщения в группы и каналы с номера {} для получения дополнительной информации перейдите в @SpamBot".format(
-                    phone)
+                text = f"Вы больше не можете отправлять сообщения в группы и каналы с номера {phone} для получения дополнительной информации перейдите в @SpamBot"
                 await bot.send_message(telegram_id, text)
-                write_mailing_err_data(phone, message, err=text, chat=chat)
+                write_mailing_err_data(phone, err=text, chat=chat)
                 return
             except errors.exceptions.not_acceptable_406.ChannelPrivate as ex:
                 text = f"Это приватный канал {chat}, невозможно отправить сообщение"
@@ -114,8 +113,7 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
                 write_mailing_err_data(phone, err=text, chat=chat)
                 continue
             except Forbidden:
-                text = "Вы не можете отправлять мультимедийные (текстовые) сообщения в этом чате. чат - {}  Номер телефона - {}".format(
-                    chat, phone)
+                text = f"Вы не можете отправлять мультимедийные (текстовые) сообщения в этом чате. чат - {chat}  Номер телефона - {phone}"
                 await bot.send_message(telegram_id, text)
                 write_mailing_err_data(phone, err=text, chat=chat)
                 continue
