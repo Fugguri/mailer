@@ -92,7 +92,6 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
                       phone_number=phone, workdir="mailing_sessions/") as app:
         sending_messages[phone] = []
         print(len(chats))
-        return
         for chat in chats:
             try:
                 message = await app.send_message(chat[3], mail_text)
@@ -117,7 +116,7 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
                 await bot.send_message(telegram_id, text)
                 write_mailing_err_data(phone, err=text, chat=chat)
                 continue
-            except errors.exceptions.forbidden_403.ChatAdminRequired as ex:
+            except ChatAdminRequired as ex:
                 text = "у вас нет прав администратора, чтобы отправлять сообщения в этот чат/канал"
                 await bot.send_message(telegram_id, text)
                 write_mailing_err_data(phone, err=text, chat=chat)
