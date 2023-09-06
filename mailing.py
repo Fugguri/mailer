@@ -94,7 +94,6 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
         sending_messages[phone] = []
         print(len(chats))
         print(chats)
-        return
         for chat in chats:
             try:
                 print(chat[3])
@@ -134,10 +133,10 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
             except AttributeError as ex:
                 print(phone, ex)
                 pass
-            except Exception as ex:
-                write_mailing_err_data(phone, err=ex, chat=chat)
-                print(ex, phone)
-                continue
+            # except Exception as ex:
+            #     write_mailing_err_data(phone, err=ex, chat=chat)
+            #     print(ex, phone)
+            #     break
             finally:
                 print(sending_messages[phone])
     # except UserDeactivatedBan:
