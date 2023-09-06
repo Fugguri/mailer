@@ -130,7 +130,9 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
                 print(phone, ex)
                 pass
             except Exception as ex:
+                text = "Непредвиденная ошибка {ex}, пожалуйста сообщите администратору!"
                 write_mailing_err_data(phone, err=ex, chat=chat)
+                await bot.send_message(telegram_id, text)
                 print(ex, phone)
                 break
             finally:
