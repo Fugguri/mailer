@@ -107,31 +107,31 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
             except errors.exceptions.not_acceptable_406.ChannelPrivate as ex:
                 text = f"Это приватный канал {chat}, невозможно отправить сообщение"
                 await bot.send_message(telegram_id, text)
-                write_mailing_err_data(phone, message, err=text, chat=chat)
+                write_mailing_err_data(phone, err=text, chat=chat)
                 continue
             except Forbidden:
                 text = "Вы не можете отправлять мультимедийные (текстовые) сообщения в этом чате. чат - {}  Номер телефона - {}".format(
                     chat, phone)
                 await bot.send_message(telegram_id, text)
-                write_mailing_err_data(phone, message, err=text, chat=chat)
+                write_mailing_err_data(phone, err=text, chat=chat)
                 continue
             except errors.exceptions.forbidden_403.ChatAdminRequired as ex:
                 text = "у вас нет прав администратора, чтобы отправлять сообщения в этот чат/канал"
                 await bot.send_message(telegram_id, text)
-                write_mailing_err_data(phone, message, err=text, chat=chat)
+                write_mailing_err_data(phone, err=text, chat=chat)
 
             except UserDeactivatedBan:
                 text = "Ваш номер был заблокирован {}.".format(phone)
                 await bot.send_message(telegram_id, text)
                 scheduler.remove_job(phone)
-                write_mailing_err_data(phone, message, err=ex, chat=chat)
+                write_mailing_err_data(phone, err=ex, chat=chat)
                 db.deactivate_client(phone)
                 return
             except AttributeError as ex:
                 print(phone, ex)
                 pass
             except Exception as ex:
-                write_mailing_err_data(phone, message, err=ex, chat=chat)
+                write_mailing_err_data(phone, err=ex, chat=chat)
                 print(ex, phone)
                 continue
             finally:
