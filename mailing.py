@@ -91,7 +91,7 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
              "port": 8000, "login": 'dGC5o8', "password": 'zcf7tx'}
     # try:
     async with Client(phone, api_id=api_id, api_hash=api_hash,
-                      phone_number=phone, workdir="mailing_sessions/") as app:
+                      phone_number=phone, workdir="mailing_sessions/", proxy=proxy) as app:
         sending_messages[phone] = []
         for chat in chats:
             try:
