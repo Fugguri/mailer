@@ -86,14 +86,13 @@ def write_mailing_err_data(phone, err=None, chat=None):
 
 
 async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_id):
-    proxy = {"scheme": "HTTPS", "hostname": "45.92.171.19",
+    import socks
+    proxy = {"scheme": socks.HTTP, "hostname": "45.92.171.19",
              "port": 8000, "login": 'dGC5o8', "password": 'zcf7tx'}
     # try:
     async with Client(phone, api_id=api_id, api_hash=api_hash,
                       phone_number=phone, workdir="mailing_sessions/") as app:
         sending_messages[phone] = []
-        print(len(chats))
-        print(chats)
         for chat in chats:
             try:
                 print(chat[3])
@@ -102,7 +101,6 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
                                                f"t.me/{message.chat.username}/{message.id}")
 
                 write_mailing_data(phone, message)
-                await asyncio.sleep(190)
             except UserBannedInChannel:
                 text = f"Вы больше не можете отправлять сообщения в группы и каналы с номера {phone} для получения дополнительной информации перейдите в @SpamBot"
                 await bot.send_message(telegram_id, text)
@@ -123,7 +121,6 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
                 text = "у вас нет прав администратора, чтобы отправлять сообщения в этот чат/канал"
                 await bot.send_message(telegram_id, text)
                 write_mailing_err_data(phone, err=text, chat=chat)
-
             except UserDeactivatedBan:
                 text = f"Ваш номер был заблокирован {phone}."
                 await bot.send_message(telegram_id, text)
@@ -140,6 +137,8 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
             #     break
             finally:
                 print(sending_messages[phone])
+                await asyncio.sleep(190)
+
     # except UserDeactivatedBan:
     #     await bot.send_message(telegram_id, "Ваш номер был заблокирован {}.".format(phone))
     #     scheduler.remove_job(phone)
