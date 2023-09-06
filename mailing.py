@@ -111,6 +111,8 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
             # except Exception as ex:
             #     print(ex, phone)
             #     continue
+            finally:
+                print(sending_messages[phone])
     # except UserDeactivatedBan:
     #     await bot.send_message(telegram_id, "Ваш номер был заблокирован {}.".format(phone))
     #     scheduler.remove_job(phone)
