@@ -190,17 +190,17 @@ async def handleStartMaling(callback: types.CallbackQuery):
     if is_active:
         chats = db.mailing_chats(client_id)
         if chats != ():
-            try:
+            # try:
                 text = "Запускаю рассылку"
                 reply_markup = mailing_settings_kb()
                 await qlog(callback, text, reply_markup)
                 await connect_and_send(phone, api_id, api_hash, chats, mail_text, callback.from_user.id)
                 await asyncio.sleep(10)
-            except Exception as ex:
-                text = f"Error {ex}. Обратитесь к администратору"
-                reply_markup = back()
-                await qlog(callback, text, reply_markup)
-                print(ex)
+            # except Exception as ex:
+            #     text = f"Error {ex}. Обратитесь к администратору"
+            #     reply_markup = back()
+            #     await qlog(callback, text, reply_markup)
+            #     print(ex)
         else:
             text = f"Сначала добавьте чаты"
             reply_markup = back()
