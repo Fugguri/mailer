@@ -82,7 +82,7 @@ def write_mailing_data(phone, message):
 def write_mailing_err_data(phone, err=None, chat=None):
     date = datetime.datetime.now().strftime("%d.%m.%Y %H:%M ") + "MSK "
     with open(f"mailing_data/{phone}.txt", "a") as file:
-        file.write(date + chat+" "+err)
+        file.write(date + str(chat[1]) + " "+str(err))
 
 
 async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_id):
