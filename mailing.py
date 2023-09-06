@@ -87,7 +87,7 @@ def write_mailing_err_data(phone, err=None, chat=None):
 
 async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_id):
     import socks
-    proxy = {"scheme": socks.HTTP, "hostname": "45.92.171.19",
+    proxy = {"scheme": "HTTP", "hostname": "45.92.171.19",
              "port": 8000, "login": 'dGC5o8', "password": 'zcf7tx'}
     # try:
     async with Client(phone, api_id=api_id, api_hash=api_hash,
