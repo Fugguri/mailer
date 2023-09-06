@@ -92,7 +92,9 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
     async with Client(phone, api_id=api_id, api_hash=api_hash,
                       phone_number=phone, workdir="mailing_sessions/") as app:
         sending_messages[phone] = []
-
+        print(len(chats))
+        print(chats)
+        return
         for chat in chats:
             try:
                 print(chat[3])
