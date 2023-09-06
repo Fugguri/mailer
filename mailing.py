@@ -76,6 +76,7 @@ def write_mailing_data(phone, message):
     msg = f"t.me/{message.chat.username}/{message.id} \n"
     with open(f"mailing_data/{phone}.txt", "a") as file:
         file.write(date + msg)
+        print(date, msg)
 
 
 def write_mailing_err_data(phone, err=None, chat=None):
@@ -91,12 +92,14 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
     async with Client(phone, api_id=api_id, api_hash=api_hash,
                       phone_number=phone, workdir="mailing_sessions/") as app:
         sending_messages[phone] = []
-        print(len(chats))
+
         for chat in chats:
             try:
+                print(chat[3])
                 message = await app.send_message(chat[3], mail_text)
                 sending_messages[phone].append(datetime.datetime.now().strftime("%D %H:%M ") + "MSK "
                                                f"t.me/{message.chat.username}/{message.id}")
+
                 write_mailing_data(phone, message)
                 await asyncio.sleep(15)
             except UserBannedInChannel:
