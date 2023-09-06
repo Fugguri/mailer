@@ -89,62 +89,55 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
     import socks
     proxy = {"scheme": "HTTP", "hostname": "45.92.171.19",
              "port": 8000, "username": 'dGC5o8', "password": 'zcf7tx'}
-    # try:
-        sending_messages[phone] = []
-        for chat in chats:
-            try:
-                async with Client(phone, api_id=api_id, api_hash=api_hash,
-                                phone_number=phone, workdir="mailing_sessions/", proxy=proxy) as app:
-                    print(chat[3])
-                    message = await app.send_message(chat[3], mail_text)
-                    sending_messages[phone].append(datetime.datetime.now().strftime("%D %H:%M ") + "MSK "
-                                                f"t.me/{message.chat.username}/{message.id}")
 
-                    write_mailing_data(phone, message)
-            except UserBannedInChannel:
-                text = f"Вы больше не можете отправлять сообщения в группы и каналы с номера {phone} для получения дополнительной информации перейдите в @SpamBot"
-                await bot.send_message(telegram_id, text)
-                write_mailing_err_data(phone, err=text, chat=chat)
-                return
-            except errors.exceptions.not_acceptable_406.ChannelPrivate as ex:
-                text = f"Это приватный канал {chat}, невозможно отправить сообщение"
-                await bot.send_message(telegram_id, text)
-                write_mailing_err_data(phone, err=text, chat=chat)
-            except Forbidden:
-                text = f"Вы не можете отправлять мультимедийные (текстовые) сообщения в этом чате. чат - {chat}  Номер телефона - {phone}"
-                await bot.send_message(telegram_id, text)
-                write_mailing_err_data(phone, err=text, chat=chat)
-            except errors.exceptions.bad_request_400.ChatAdminRequired as ex:
-                print(ex)
-                text = "у вас нет прав администратора, чтобы отправлять сообщения в этот чат/канал"
-                await bot.send_message(telegram_id, text)
-                write_mailing_err_data(phone, err=text, chat=chat)
-            except UserDeactivatedBan:
-                text = f"Ваш номер был заблокирован {phone}."
-                await bot.send_message(telegram_id, text)
-                scheduler.remove_job(phone)
-                write_mailing_err_data(phone, err=ex, chat=chat)
-                db.deactivate_client(phone)
-                return
-            except AttributeError as ex:
-                print(phone, ex)
-                pass
-            except Exception as ex:
-                text = "Непредвиденная ошибка {ex}, пожалуйста сообщите администратору!"
-                write_mailing_err_data(phone, err=ex, chat=chat)
-                await bot.send_message(telegram_id, text)
-                print(ex, phone)
-                break
-            finally:
-                print(sending_messages[phone])
-                await asyncio.sleep(190)
+    sending_messages[phone] = []
+    for chat in chats:
+        try:
+            async with Client(phone, api_id=api_id, api_hash=api_hash,
+                              phone_number=phone, workdir="mailing_sessions/", proxy=proxy) as app:
+                print(chat[3])
+                message = await app.send_message(chat[3], mail_text)
+                sending_messages[phone].append(datetime.datetime.now().strftime("%D %H:%M ") + "MSK "
+                                               f"t.me/{message.chat.username}/{message.id}")
 
-    # except UserDeactivatedBan:
-    #     await bot.send_message(telegram_id, "Ваш номер был заблокирован {}.".format(phone))
-    #     scheduler.remove_job(phone)
-    #     db.deactivate_client(phone)
-    #     return
-    # except BotBlocked:
-    #     return
-    # except Exception as ex:
-    #     print(ex, phone)
+                write_mailing_data(phone, message)
+        except UserBannedInChannel:
+            text = f"Вы больше не можете отправлять сообщения в группы и каналы с номера {phone} для получения дополнительной информации перейдите в @SpamBot"
+            await bot.send_message(telegram_id, text)
+            write_mailing_err_data(phone, err=text, chat=chat)
+            return
+        except errors.exceptions.not_acceptable_406.ChannelPrivate as ex:
+            text = f"Это приватный канал {chat}, невозможно отправить сообщение"
+            await bot.send_message(telegram_id, text)
+            write_mailing_err_data(phone, err=text, chat=chat)
+        except Forbidden:
+            text = f"Вы не можете отправлять мультимедийные (текстовые) сообщения в этом чате. чат - {chat}  Номер телефона - {phone}"
+            await bot.send_message(telegram_id, text)
+            write_mailing_err_data(phone, err=text, chat=chat)
+        except errors.exceptions.bad_request_400.ChatAdminRequired as ex:
+            print(ex)
+            text = "у вас нет прав администратора, чтобы отправлять сообщения в этот чат/канал"
+            await bot.send_message(telegram_id, text)
+            write_mailing_err_data(phone, err=text, chat=chat)
+        except UserDeactivatedBan:
+            text = f"Ваш номер был заблокирован {phone}."
+            await bot.send_message(telegram_id, text)
+            scheduler.remove_job(phone)
+            write_mailing_err_data(phone, err=ex, chat=chat)
+
+            return
+        except BotBlocked:
+            db.deactivate_client(phone)
+            return
+        except AttributeError as ex:
+            print(phone, ex)
+            pass
+        except Exception as ex:
+            text = "Непредвиденная ошибка {ex}, пожалуйста сообщите администратору!"
+            write_mailing_err_data(phone, err=ex, chat=chat)
+            await bot.send_message(telegram_id, text)
+            print(ex, phone)
+            break
+        finally:
+            print(sending_messages[phone])
+            await asyncio.sleep(190)
