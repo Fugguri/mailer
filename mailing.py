@@ -119,6 +119,7 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
                 write_mailing_err_data(phone, err=text, chat=chat)
                 continue
             except errors.exceptions.bad_request_400.ChatAdminRequired as ex:
+                print(ex)
                 text = "у вас нет прав администратора, чтобы отправлять сообщения в этот чат/канал"
                 await bot.send_message(telegram_id, text)
                 write_mailing_err_data(phone, err=text, chat=chat)
