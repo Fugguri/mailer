@@ -94,7 +94,7 @@ async def connect_and_send(phone, api_id, api_hash, chats, mail_text, telegram_i
     for chat in chats:
         try:
             async with Client(phone, api_id=api_id, api_hash=api_hash,
-                              phone_number=phone, workdir="mailing_sessions/", proxy=proxy) as app:
+                              phone_number=phone, workdir="mailing_sessions/") as app:
                 print(chat[3])
                 message = await app.send_message(chat[3], mail_text)
                 sending_messages[phone].append(datetime.datetime.now().strftime("%D %H:%M ") + "MSK "
